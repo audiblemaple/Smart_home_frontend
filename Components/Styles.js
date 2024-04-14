@@ -11,15 +11,17 @@ export const Colors = {
     dark_light: "#9CA3AF",
     brand: "#6D28D9",
     green: "#10B981",
-    red: "#EF4444"
+    red: "#EF4444",
+    orange: "#ff7e00"
 }
 
 const { primary, secondary, tertiary, dark_light, brand, green, red } = Colors;
 
+// TODO: check what is up with the margin-vertical property for: {StyledTextInput, StyledButton, Line}
+
 export const StyledContainer = styled.View`
     flex: 1;
-    padding: 25px;
-    padding-top: ${StatusBarHeight + 30}px;
+    padding: ${StatusBarHeight + 30}px 25px 25px 25px;
     background-color: ${primary};
 `;
 
@@ -30,25 +32,23 @@ export const InnerContainer = styled.View`
 `;
 
 export const WelcomeContainer = styled(InnerContainer)`
-    padding: 25px;
-    padding-top: 10px;
+    padding: 10px 25px 25px 25px;
     justify-content: center;
 `;
 
 export const PageLogo = styled.Image`
     width: 220px;
     height: 220px;
+
 `;
 
 export const Avatar = styled.Image`
     width: 100px;
     height: 100px;
-    margin: auto;
+    margin: 10px auto 10px auto;
     border-radius: 50px;
     border-width: 2px;
     border-color: ${secondary};
-    margin-bottom: 10px;
-    margin-top: 10px;
 `;
 
 export const WelcomeImage = styled.Image`
@@ -87,13 +87,10 @@ export const StyledFormArea = styled.View`
 
 export const StyledTextInput = styled.TextInput`
     background-color: ${secondary};
-    padding: 15px;
-    padding-left: 55px;
-    padding-right: 55px;
+    padding: 15px 55px 15px 55px;
     border-radius: 5px;
     font-size: 16px;
     height: 60px;
-    margin-vertical: 3px;
     margin-bottom: 10px;
     color: ${tertiary};
 `;
@@ -124,7 +121,6 @@ export const StyledButton = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     border-radius: 5px;
-    margin-vertical: 5px;
     height: 55px;
     
     ${(props) => props.google === true && `
@@ -155,7 +151,7 @@ export const Line = styled.View`
     height: 1px;
     width: 100%;
     background-color: ${dark_light};
-    margin-vertical: 10px;
+    margin: 20px 0 10px 0;
 `;
 
 export const ExtraView = styled.View`
