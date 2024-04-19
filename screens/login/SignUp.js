@@ -5,7 +5,7 @@ import {StatusBar} from "expo-status-bar";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 // formik
-import {Field, Formik} from "formik";
+import {Formik} from "formik";
 
 // icons
 import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
@@ -38,6 +38,7 @@ import KeyboardAvoidingWrapper from "../../Components/KeyboardAvoidingWrapper";
 
 // API client
 import axios from "axios";
+import DocumentPickerComponent from "../../Components/under_test/FileUploadComponent";
 
 const {brand, dark_light, primary} = Colors
 
@@ -47,30 +48,50 @@ const Signup = ({navigation}) => {
     const [hidePassword, setHidePassword] = useState(true);
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(new Date(2000, 0 ,1));
-
     // user date
     const [userDate, setUserDate] = useState();
+    const [file, setFile] = useState(null);
 
 
     const onChange = (event, selectedDate) => {
+        console.log("date is clicked")
         const currentDate = selectedDate || date;
         setShow(false);
         setDate(currentDate);
         setUserDate(currentDate);
+        console.log(userDate);
     }
 
-    const showDatePicker = () => {
-        setShow(true);
-    }
-
-
+    const showDatePicker = () => { setShow(true); }
 
     const handleSignup = (credentials, setSubmitting) => {
+
         handleMessage(null);
-        const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        // const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        const url = "http://192.168.0.233:5000/api/v1/user/signup"
+        // const url = "http://100.64.100.6:5000/api/v1/user/signup"
+
+
+        // Creating FormData to include file and other data
+        const formData = new FormData();
+        formData.append('name', credentials.name);
+        formData.append('email', credentials.email);
+        formData.append('password', credentials.password);
+        formData.append('confirmPassword', credentials.confirmPassword);
+        formData.append('dateOfBirth', credentials.dateOfBirth.toISOString().slice(0, 24));
+        // formData.append('dateOfBirth', credentials.dateOfBirth);
+
+        // Append file if it exists
+        if (credentials.file)
+            formData.append('file', file);
 
         axios
-            .post(url, credentials )
+            .post(url, formData, {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "multipart/form-data",
+                },
+            } )
             .then((response) => {
                 const result = response.data;
                 const {message, status, user} = result;
@@ -111,20 +132,32 @@ const Signup = ({navigation}) => {
                     {/*TODO: Fix this on IOS it doesnt display the date time picker!!*/}
                     {show && (
                         <DateTimePicker
+                            testID='dateTimePicker'
                             value={date}
                             mode='date'
                             is24Hour={true}
                             display="spinner"
                             onChange={onChange}
-                            style={{width: 320, backgroundColor: "white"}}
                         />
-
                     )}
 
                     <Formik
-                        initialValues={{name: '', email: '', dateOfBirth: '', password: '', confirmPassword: ''}}
-                        onSubmit={(values, {setSubmitting}) => {
-                            values = {...values, dateOfBirth: userDate}
+                        initialValues={
+                        {
+                            name: '',
+                            email: '',
+                            dateOfBirth: '',
+                            password: '',
+                            confirmPassword: ''
+                        }
+                    }
+                        onSubmit={(values, {setSubmitting}) =>
+                        {
+                            values = {
+                                ...values,
+                                dateOfBirth: userDate,
+                                file: file
+                            }
                             if (values.email === '') {
                                 handleMessage("Email field cannot be empty");
                                 setSubmitting(false);
@@ -135,14 +168,11 @@ const Signup = ({navigation}) => {
                                 setSubmitting(false);
                                 return;
                             }
-
-                            console.log(values.dateOfBirth);
-
-                            // if (values.dateOfBirth === '') {
-                            //     handleMessage("Date of birth field cannot be empty");
-                            //     setSubmitting(false);
-                            //     return;
-                            // }
+                            if (values.dateOfBirth === '') {
+                                handleMessage("Date of birth field cannot be empty");
+                                setSubmitting(false);
+                                return;
+                            }
                             if (values.password === '') {
                                 handleMessage("Password field cannot be empty");
                                 setSubmitting(false);
@@ -157,6 +187,7 @@ const Signup = ({navigation}) => {
                                 handleMessage("Passwords do not match");
                                 return;
                             }
+
                             handleSignup(values, setSubmitting);
                         }}
                     >
@@ -224,11 +255,13 @@ const Signup = ({navigation}) => {
                                     setHidePassword={setHidePassword}
                                 />
 
+                                <DocumentPickerComponent setFile={setFile}/>
+
                                 <MsgBox type={messageType}>{message}</MsgBox>
 
                                 {!isSubmitting &&
                                     <StyledButton onPress={handleSubmit}>
-                                        <ButtonText>Login</ButtonText>
+                                        <ButtonText>Sign up</ButtonText>
                                     </StyledButton>
                                 }
                                 {isSubmitting &&
@@ -263,7 +296,7 @@ const TextInput = ({label, icon, isPassword, hidePassword, setHidePassword,isDat
             </LeftIcon>
             <StyledInputLabel>{label}</StyledInputLabel>
             {!isDate && <StyledTextInput {...props}/>}
-            {isDate && <TouchableOpacity onPress={showDatePicker}>
+            {isDate && <TouchableOpacity onPress={showDatePicker} >
                 <StyledTextInput {...props}/>
             </TouchableOpacity>}
             {isPassword &&

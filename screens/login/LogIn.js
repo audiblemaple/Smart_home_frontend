@@ -49,6 +49,7 @@ const LogIn = ({navigation}) => {
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
     const handleLogin = (credentials, setSubmitting) => {
+
         handleMessage(null);
         const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/"
 
@@ -128,7 +129,6 @@ const LogIn = ({navigation}) => {
                     <Formik
                         initialValues={{email: '', password: ''}}
                         onSubmit={(values, {setSubmitting}) => {
-
                             if (values.email === '') {
                                 handleMessage("Email field cannot be empty");
                                 setSubmitting(false);
