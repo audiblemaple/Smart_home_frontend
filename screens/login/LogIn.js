@@ -114,7 +114,6 @@ const LogIn = ({navigation}) => {
                 handleMessage("An error occurred\ncheck your network and try again");
                 setGoogleSubmitting(false);
             });
-
     }
 
 

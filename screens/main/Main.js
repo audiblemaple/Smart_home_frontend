@@ -8,7 +8,7 @@
 
 import React, {Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {StatusBar} from "expo-status-bar";
-import {View} from "react-native";
+import {Text, View} from "react-native";
 import DocumentPickerComponent from "../../Components/under_test/FileUploadComponent";
 
 // three
@@ -62,28 +62,29 @@ const Main = ({ navigation, route }) => {
     const [OrbitControls, events] = useControls();
     const [angle, setAngle] = useState(zeroDegrees);
     const [isRotating, setIsRotating] = useState(false);
-
+    const { name, email, models, selectedModelIndex } = route.params;
+    const {URL} = models[selectedModelIndex];
     /**
      * Rotates the model to the right by increasing the current angle by 10 degrees.
      */
     const rotate_model_right = useCallback(() => {
+        console.log("rotating model right");
+        if (isRotating)
+            return;
+        setIsRotating(true);
+        let step = 0;
+        const intervalId = setInterval(() => {
+            if (step < 10) {
                 console.log("rotating model right");
-                if (isRotating)
-                    return;
-                setIsRotating(true);
-                let step = 0;
-                const intervalId = setInterval(() => {
-                    if (step < 10) {
-                        console.log("rotating model right");
-                        // setAngle(prevAngle => (prevAngle + oneDegree) % Math.PI);
-                        setAngle(prevAngle => (prevAngle + oneDegree));
-                        step++;
-                    } else {
-                        clearInterval(intervalId);
-                        setIsRotating(false);
-                    }
-                }, 5);
-        }, [isRotating, setAngle, setIsRotating]);
+                // setAngle(prevAngle => (prevAngle + oneDegree) % Math.PI);
+                setAngle(prevAngle => (prevAngle + oneDegree));
+                step++;
+            } else {
+                clearInterval(intervalId);
+                setIsRotating(false);
+            }
+        }, 5);
+    }, [isRotating, setAngle, setIsRotating]);
 
     /**
      * Rotates the model to the left by decreasing the current angle by 10 degrees.
@@ -148,6 +149,8 @@ const Main = ({ navigation, route }) => {
         <>
             <StatusBar style="light"/>
             <View style={{flex: 1}} {...events}>
+
+                {URL !== "noModel" &&
                 <Canvas
                     key={cameraPosition.join(',')}
                     shadows={true}
@@ -159,8 +162,8 @@ const Main = ({ navigation, route }) => {
                         zoomSpeed={0.3}
                         minZoom={4.5}
                         maxZoom={6.5}
-                        rotateSpeed={0.6}
-                        dampingFactor={0.03}
+                        rotateSpeed={0.7}
+                        dampingFactor={0.02}
                         minPolarAngle={zeroDegrees}
                         maxPolarAngle={sixtyDegrees}
                         // target={new Vector3(0,0,0)}
@@ -208,22 +211,32 @@ const Main = ({ navigation, route }) => {
                     />
 
                     <Suspense fallback={null}>
-                        <House angle={angle}/>
+                        <House angle={angle} setAngle={setAngle} models={models} selectedModelIndex={selectedModelIndex} />
                     </Suspense>
                 </Canvas>
+                }
+                {URL === "noModel" &&
+                    <View>
+                        <Text>
+                            hello world
+                        </Text>
+                    </View>
+                }
+
+
 
                 {/*TODO: the buttons dont work on Android*/}
                 <StyledButton onPress={() => { move_camera([0, 2, 5]) }}>
-                    <ButtonText>move cam</ButtonText>
+                    <ButtonText>regular view</ButtonText>
                 </StyledButton>
                 <StyledButton onPress={() => { move_camera([0, 5, 0]) }}>
-                    <ButtonText>move cam</ButtonText>
+                    <ButtonText>top view</ButtonText>
                 </StyledButton>
                 <StyledButton onPress={rotate_model_right}>
                     <ButtonText>Rotate right</ButtonText>
                 </StyledButton>
                 <StyledButton onPress={rotate_model_left}>
-                    <ButtonText>Rotate right</ButtonText>
+                    <ButtonText>Rotate left</ButtonText>
                 </StyledButton>
 
             </View>

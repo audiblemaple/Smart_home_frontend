@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {View, Text, Image, TextInput, TouchableOpacity} from "react-native";
 import Constants from "expo-constants";
-
 const StatusBarHeight = Constants.statusBarHeight;
 
 export const Colors = {
@@ -9,10 +8,12 @@ export const Colors = {
     secondary: "#E5E7EB",
     tertiary: "#1F2937",
     dark_light: "#9CA3AF",
+    gray: "#6B7280",
     brand: "#6D28D9",
     green: "#10B981",
     red: "#EF4444",
-    orange: "#ff7e00"
+    orange: "#ff7e00",
+    transparentGreen: 'rgba(16, 185, 129, 0.1)'
 }
 
 const { primary, secondary, tertiary, dark_light, brand, green, red } = Colors;
@@ -21,8 +22,7 @@ const { primary, secondary, tertiary, dark_light, brand, green, red } = Colors;
 
 export const StyledContainer = styled.View`
     flex: 1;
-    padding: ${StatusBarHeight + 30}px 25px 25px 25px;
-    background-color: ${primary};
+    padding: ${StatusBarHeight + 30}px 25px 0 25px;
 `;
 
 export const InnerContainer = styled.View`
@@ -37,8 +37,8 @@ export const WelcomeContainer = styled(InnerContainer)`
 `;
 
 export const PageLogo = styled.Image`
-    width: 220px;
-    height: 220px;
+    width: 210px;
+    height: 210px;
 
 `;
 
@@ -61,7 +61,7 @@ export const PageTitle = styled.Text`
     text-align: center;
     font-weight: bold;
     color: ${brand};
-    padding: 10px;
+    padding: 10px 10px 0 10px;
     
     ${(props) => props.welcome && `
         font-size: 35px;
@@ -70,7 +70,7 @@ export const PageTitle = styled.Text`
 
 export const SubTitle = styled.Text`
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     letter-spacing: 1px;
     font-weight: bold;
     color: ${tertiary};
@@ -98,13 +98,15 @@ export const StyledTextInput = styled.TextInput`
 
 export const StyledInputLabel = styled.Text`
     color: ${tertiary};
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: bold;
     text-align: left;
+    margin: 0 0 3px 0;
 `;
 
 export const LeftIcon = styled.View`
     left: 15px;
-    top: 38px;
+    top: 30px;
     position: absolute;
     z-index: 1;
 `;
@@ -142,17 +144,17 @@ export const ButtonText = styled.Text`
 
 export const MsgBox = styled.Text`
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     color: ${props => props.type === "success" ? green : red};
-    
+    margin: 5px 0 5px 0;
 `;
 
 export const Line = styled.View`
     height: 1px;
     width: 100%;
     background-color: ${dark_light};
-    margin: 20px 0 10px 0;
+    margin: 30px 0 10px 0;
 `;
 
 export const ExtraView = styled.View`
@@ -177,4 +179,54 @@ export const TextLink = styled.TouchableOpacity`
 export const TextLinkContent = styled.Text`
     color: ${brand};
     font-size: 15px;
+    
+    ${(props) => {
+        const {resendStatus} = props
+        
+        switch (resendStatus){
+            case 'Failed!':
+                return `color: ${Colors.red}`;
+                
+            case 'Sent!':
+                return `color: ${Colors.green}`
+        }
+    }}
+    
+`;
+
+// Verification components
+export const VerificationTopHalf = styled.View`
+    flex: 1;
+    justify-content: center;
+    padding: 20px;
+`;
+export const IconBig = styled.View`
+    width: 250px;
+    height: 250px;
+    background-color: ${Colors.transparentGreen};
+    border-radius: 250px;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const VerificationBottomHalf = styled(VerificationTopHalf)`
+    justify-content: space-around;
+`;
+
+export const InfoText = styled.Text`
+    color: ${Colors.gray};
+    font-size: 15px;
+    text-align: center;
+`;
+
+export const EmphasizeText = styled.Text`
+    font-weight: bold;
+    font-style: italic;
+`;
+
+export const InlineGroup = styled.View`
+    flex-direction: row;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
 `;

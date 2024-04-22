@@ -49,11 +49,12 @@ const Signup = ({navigation}) => {
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(new Date(2000, 0 ,1));
     // user date
-    const [userDate, setUserDate] = useState();
+    const [userDate, setUserDate] = useState(new Date());
     const [file, setFile] = useState(null);
 
 
     const onChange = (event, selectedDate) => {
+        console.log("Event details:", event);
         console.log("date is clicked")
         const currentDate = selectedDate || date;
         setShow(false);
@@ -67,8 +68,8 @@ const Signup = ({navigation}) => {
     const handleSignup = (credentials, setSubmitting) => {
 
         handleMessage(null);
-        // const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
-        const url = "http://192.168.0.233:5000/api/v1/user/signup"
+        const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        // const url = "http://192.168.0.233:5000/api/v1/user/signup"
         // const url = "http://100.64.100.6:5000/api/v1/user/signup"
 
 
@@ -102,7 +103,6 @@ const Signup = ({navigation}) => {
 
                 navigation.navigate('Welcome', {...user});
                 setSubmitting(false);
-
             })
             .catch(error => {
                 setSubmitting(false);
@@ -129,7 +129,7 @@ const Signup = ({navigation}) => {
                     <PageTitle>Smart home</PageTitle>
                     <SubTitle> Account Signup</SubTitle>
 
-                    {/*TODO: Fix this on IOS it doesnt display the date time picker!!*/}
+                    {/*TODO: Fix this on IOS it doesnt display the date time picker menu!!*/}
                     {show && (
                         <DateTimePicker
                             testID='dateTimePicker'

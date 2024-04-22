@@ -1,38 +1,29 @@
-import React, {useMemo} from "react";
-
-// gltf file loader
+import React, { useMemo } from "react";
 import { useGLTF } from "@react-three/drei/native";
-import {ButtonText, StyledButton} from "../Styles";
 
-const House = ({angle}) => {
-	// const model = useGLTF("https://smart-home-bucket-lior.s3.eu-north-1.amazonaws.com/shorashim.glb");
-	const model = useGLTF(require("../../assets/shorashim.glb"));
-
-	// model.scene.traverse((child) => {
-	// 	if (child.isMesh && (child.name.includes("wall") || child.name.includes("floor"))) {
-	// 		child.castShadow = true;
-	// 		child.receiveShadow = true;
-	// 	}
-	// });
+const House = ({ angle, setAngle, models, selectedModelIndex }) => {
+	// Always call hooks at the top level
+	const {initialRotationVal, URL } = models[selectedModelIndex]
+	const { scene } = useGLTF(URL);
 
 	useMemo(() => {
-		model.scene.traverse((child) => {
-			if (child.isMesh && (child.name.includes("wall") || child.name.includes("floor"))) {
-				child.castShadow = true;
-				child.receiveShadow = true;
-			}
-		});
-	}, [model]);
-
+		if (scene) {
+			setAngle(initialRotationVal); // Assume this is meant to set state outside of rendering
+			scene.traverse((child) => {
+				if (child.isMesh && (child.name.includes("wall") || child.name.includes("floor"))) {
+					child.castShadow = true;
+					child.receiveShadow = true;
+				}
+			});
+		}
+	}, [scene, initialRotationVal, setAngle]);
 
 	return (
 		<primitive
-			object={model.scene}
+			object={scene}
 			position={[0, 0, 0]}
 			scale={0.4}
-			// rotation={[0, 270 * Math.PI / 180, 0]}
 			rotation={[0, angle, 0]}
-
 			castShadow={true}
 			receiveShadow={true}
 		/>
@@ -40,3 +31,40 @@ const House = ({angle}) => {
 };
 
 export default House;
+
+
+
+// import React, {useMemo} from "react";
+//
+// // gltf file loader
+// import { useGLTF } from "@react-three/drei/native";
+//
+// const House = ({angle, setAngle, models, selectedModelIndex}) => {
+// 	const model = models[selectedModelIndex];
+// 	const houseModel = useGLTF(model.URL);
+//
+// 	useMemo(() => {
+// 		setAngle(model.initialRotationVal)
+// 		houseModel.scene.traverse((child) => {
+// 			if (child.isMesh && (child.name.includes("wall") || child.name.includes("floor"))) {
+// 				child.castShadow = true;
+// 				child.receiveShadow = true;
+// 			}
+// 		});
+// 	}, [houseModel]);
+//
+//
+// 	return (
+// 		<primitive
+// 			object={houseModel.scene}
+// 			position={[0, 0, 0]}
+// 			scale={0.4}
+// 			rotation={[0, angle, 0]}
+//
+// 			castShadow={true}
+// 			receiveShadow={true}
+// 		/>
+// 	);
+// };
+//
+// export default House;

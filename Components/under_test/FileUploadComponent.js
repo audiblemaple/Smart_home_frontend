@@ -14,7 +14,7 @@ const DocumentPickerComponent = ({ setFile }) => {
 			if (!assets) return console.log("No file...");
 			const file = assets[0];
 			const model = {
-				name: file.name.split(".")[0],
+				name: file.name,
 				uri: file.uri,
 				type: file.mimeType,
 				size: file.size,
