@@ -1,13 +1,13 @@
-
 import React from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import {ButtonText, StyledButton} from "../Styles";
+import {ButtonText, StyledButton} from "./Styles";
 
 const DocumentPickerComponent = ({ setFile }) => {
 	const handleDocumentPick = async () => {
 		try {
 			const result = await DocumentPicker.getDocumentAsync({
-				type: '*/*',  // All files, or you can specify specific MIME types
+				// type: ['model/obj',' */*'],
+				type: ['*/*'],
 			});
 
 			const assets = result.assets;

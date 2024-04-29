@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import {View, Text, Image, TextInput, TouchableOpacity} from "react-native";
 import Constants from "expo-constants";
 const StatusBarHeight = Constants.statusBarHeight;
 
@@ -13,10 +12,25 @@ export const Colors = {
     green: "#10B981",
     red: "#EF4444",
     orange: "#ff7e00",
-    transparentGreen: 'rgba(16, 185, 129, 0.1)'
+    transparentGreen: 'rgba(16, 185, 129, 0.1)',
+    transparentGray: 'rgba(154,154,154,0.52)',
+    transparentWhite: 'rgba(217,217,217,0.75)'
 }
 
-const { primary, secondary, tertiary, dark_light, brand, green, red } = Colors;
+const {
+    primary,
+    secondary,
+    tertiary,
+    dark_light,
+    gray,
+    brand,
+    green,
+    red,
+    orange,
+    transparentGreen,
+    transparentGray,
+    transparentWhite
+} = Colors;
 
 // TODO: check what is up with the margin-vertical property for: {StyledTextInput, StyledButton, Line}
 
@@ -36,10 +50,18 @@ export const WelcomeContainer = styled(InnerContainer)`
     justify-content: center;
 `;
 
+export const DatetimeContainer = styled(InnerContainer)`
+    background-color: ${primary};
+    position: absolute;
+    bottom: -5%;
+    z-index: 1;
+    border-radius: 30px;
+    padding: 5px;
+`;
+
 export const PageLogo = styled.Image`
     width: 210px;
     height: 210px;
-
 `;
 
 export const Avatar = styled.Image`
@@ -63,8 +85,8 @@ export const PageTitle = styled.Text`
     color: ${brand};
     padding: 10px 10px 0 10px;
     
-    ${(props) => props.welcome && `
-        font-size: 35px;
+    ${(props) => props.color && `
+        color: ${props.color}
     `}
 `;
 
@@ -101,12 +123,12 @@ export const StyledInputLabel = styled.Text`
     font-size: 14px;
     font-weight: bold;
     text-align: left;
-    margin: 0 0 3px 0;
+    margin: 0 0 5px 0;
 `;
 
 export const LeftIcon = styled.View`
     left: 15px;
-    top: 30px;
+    top: 36px;
     position: absolute;
     z-index: 1;
 `;
@@ -131,6 +153,16 @@ export const StyledButton = styled.TouchableOpacity`
       flex-direction: row;
       justify-content: center;
     `}
+`;
+
+export const ClickableText = styled.Text`
+    flex: 1;
+    text-align: center;
+    border-radius: 20px;
+    margin: 0 5px 0 5px;
+    height: 30px;
+    width: 20px;
+    color: #3f3fff;
 `;
 
 export const ButtonText = styled.Text`
@@ -175,7 +207,6 @@ export const TextLink = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
 `;
-
 export const TextLinkContent = styled.Text`
     color: ${brand};
     font-size: 15px;
@@ -191,7 +222,6 @@ export const TextLinkContent = styled.Text`
                 return `color: ${Colors.green}`
         }
     }}
-    
 `;
 
 // Verification components
@@ -214,6 +244,7 @@ export const VerificationBottomHalf = styled(VerificationTopHalf)`
 `;
 
 export const InfoText = styled.Text`
+    margin: 20px 0 5px 0;
     color: ${Colors.gray};
     font-size: 15px;
     text-align: center;
@@ -225,8 +256,81 @@ export const EmphasizeText = styled.Text`
 `;
 
 export const InlineGroup = styled.View`
-    flex-direction: row;
+    flex-direction: column;
     padding: 10px;
     justify-content: center;
     align-items: center;
+`;
+
+// MenuBar styles
+export const MenuBarContainerSmall = styled.View`
+    position: absolute;
+    left: 5%;
+    bottom: 40px;
+    width: 90%;    
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 20px;
+    background-color: ${transparentGray};
+    padding: 5px;
+    border: solid black 2px;
+`;
+
+export const MenuBarContainerFull = styled(MenuBarContainerSmall)`
+    border-radius: 0 20px 20px 0;
+    width: 13%;
+`;
+
+export const MenuBarButton = styled.TouchableOpacity`
+    padding: 10px;
+    background-color: transparent;
+    align-items: center;
+    border-radius: 10px;
+`;
+
+
+// Modal window
+export const ModalContainer = styled.View`
+    position: absolute;
+    padding: 5px 20px 5px 20px;
+    border-radius: 30px;
+    bottom: 2%;
+    left: 5%;
+    right: 5%;
+    flex: 1;
+    height: auto;
+    justify-items: center;
+    justify-content: center;
+    background-color: #e1e1e1;
+`;
+
+
+export const BottomContainer = styled.View`
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 30px;
+    margin: 20px 0 0 0;
+`;
+
+export const GridView = styled.View`
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px;
+    justify-content: center;
+    gap: 30px;
+`;
+
+export const GridItem = styled.View`
+    width: 60px;
+    height: 60px;
+    padding: 5px;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: ${gray};
+    z-index: 1;
 `;

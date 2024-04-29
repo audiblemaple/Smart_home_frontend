@@ -8,12 +8,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Formik} from "formik";
 
 // icons
-import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
+import {Octicons, Ionicons} from '@expo/vector-icons';
 
+// styled components
 import {
     StyledContainer,
     InnerContainer,
-    PageLogo,
     PageTitle,
     SubTitle,
     StyledFormArea,
@@ -29,16 +29,18 @@ import {
     ExtraView,
     ExtraText,
     TextLink,
-    TextLinkContent
+    TextLinkContent, DatetimeContainer
 } from "../../Components/Styles";
-import {View, TouchableOpacity, ActivityIndicator} from "react-native";
+import {View, TouchableOpacity, ActivityIndicator, Button, Platform} from "react-native";
 
 // keyboard
 import KeyboardAvoidingWrapper from "../../Components/KeyboardAvoidingWrapper";
 
 // API client
-import axios from "axios";
-import DocumentPickerComponent from "../../Components/under_test/FileUploadComponent";
+import axios, {Cancel} from "axios";
+
+import DocumentPickerComponent from "../../Components/FileUploadComponent";
+import ModalWindow from "../../Components/ModalWindow";
 
 const {brand, dark_light, primary} = Colors
 
@@ -53,25 +55,26 @@ const Signup = ({navigation}) => {
     const [file, setFile] = useState(null);
 
 
-    const onChange = (event, selectedDate) => {
-        console.log("Event details:", event);
-        console.log("date is clicked")
+    const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShow(false);
+        if (Platform.OS === "android")
+            setShow(false);
         setDate(currentDate);
         setUserDate(currentDate);
-        console.log(userDate);
+    }
+
+    const closeDate = () => {
+        setShow(false);
     }
 
     const showDatePicker = () => { setShow(true); }
 
     const handleSignup = (credentials, setSubmitting) => {
-
         handleMessage(null);
         const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        // const url = "http://192.168.0.233:5000/api/v1/user/UploadModel" // debug
         // const url = "http://192.168.0.233:5000/api/v1/user/signup"
         // const url = "http://100.64.100.6:5000/api/v1/user/signup"
-
 
         // Creating FormData to include file and other data
         const formData = new FormData();
@@ -80,7 +83,6 @@ const Signup = ({navigation}) => {
         formData.append('password', credentials.password);
         formData.append('confirmPassword', credentials.confirmPassword);
         formData.append('dateOfBirth', credentials.dateOfBirth.toISOString().slice(0, 24));
-        // formData.append('dateOfBirth', credentials.dateOfBirth);
 
         // Append file if it exists
         if (credentials.file)
@@ -95,13 +97,16 @@ const Signup = ({navigation}) => {
             } )
             .then((response) => {
                 const result = response.data;
-                const {message, status, user} = result;
+                const {message, status, data} = result;
 
                 handleMessage(message, status);
-                if (! (message && status && user) )
-                    return;
+                if (! (message && status && data) ){
+                    setSubmitting(false);
+                    console.log(result);
+                    return handleMessage("an error occurred");
+                }
 
-                navigation.navigate('Welcome', {...user});
+                navigation.navigate('Verification', {...data});
                 setSubmitting(false);
             })
             .catch(error => {
@@ -130,34 +135,39 @@ const Signup = ({navigation}) => {
                     <SubTitle> Account Signup</SubTitle>
 
                     {/*TODO: Fix this on IOS it doesnt display the date time picker menu!!*/}
-                    {show && (
+                    { Platform.OS === "android" && show &&
                         <DateTimePicker
                             testID='dateTimePicker'
                             value={date}
                             mode='date'
                             is24Hour={true}
                             display="spinner"
-                            onChange={onChange}
+                            onChange={onDateChange}
                         />
-                    )}
+                    }
+                    { Platform.OS === "ios" && show &&
+                        <DatetimeContainer>
+                            <DateTimePicker
+                                testID='dateTimePicker'
+                                value={date}
+                                mode='date'
+                                is24Hour={true}
+                                display="spinner"
+                                onChange={onDateChange}
+                                minimumDate={new Date(1924, 4, 1)}
+                                maximumDate={new Date()}
+                            />
+                            <Button title="Confirm" onPress={closeDate} ></Button>
+
+                        </DatetimeContainer>
+                    }
 
                     <Formik
-                        initialValues={
-                        {
-                            name: '',
-                            email: '',
-                            dateOfBirth: '',
-                            password: '',
-                            confirmPassword: ''
-                        }
+                        initialValues={{ name: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' }
                     }
                         onSubmit={(values, {setSubmitting}) =>
                         {
-                            values = {
-                                ...values,
-                                dateOfBirth: userDate,
-                                file: file
-                            }
+                            values = { ...values, dateOfBirth: userDate, file: file }
                             if (values.email === '') {
                                 handleMessage("Email field cannot be empty");
                                 setSubmitting(false);
@@ -225,6 +235,7 @@ const Signup = ({navigation}) => {
                                     isDate={true}
                                     editable={false}
                                     showDatePicker={showDatePicker}
+                                    onPressIn={showDatePicker}
                                 />
 
                                 <TextInput
@@ -283,6 +294,7 @@ const Signup = ({navigation}) => {
                         )}
                     </Formik>
                 </InnerContainer>
+
             </StyledContainer>
         </KeyboardAvoidingWrapper>
     );

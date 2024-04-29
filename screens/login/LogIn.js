@@ -26,20 +26,21 @@ import {
     ExtraView,
     ExtraText,
     TextLink,
-    TextLinkContent
+    TextLinkContent, BottomContainer
 } from "../../Components/Styles";
-import {View, ActivityIndicator} from "react-native";
+import {View, ActivityIndicator, Text, Pressable, Button, Platform} from "react-native";
 
-const {brand, dark_light, primary} = Colors
+const { dark_light, primary} = Colors
 
 // keyboard
 import KeyboardAvoidingWrapper from "../../Components/KeyboardAvoidingWrapper";
-
+import TextInput from "../../Components/TextInput";
 // API client
 import axios from "axios";
 
 // google
 import * as Google from 'expo-google-app-auth'
+import ModalWindow from "../../Components/ModalWindow";
 
 const LogIn = ({navigation}) => {
 
@@ -48,23 +49,25 @@ const LogIn = ({navigation}) => {
     const [messageType, setMessageType] = useState('');
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
-    const handleLogin = (credentials, setSubmitting) => {
+    const [modalteststate, setmodalteststate] = useState(false);
 
+    const handleLogin = (credentials, setSubmitting) => {
         handleMessage(null);
         const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/"
-
         axios
             .post(url, credentials )
             .then((response) => {
                 const result = response.data;
                 const {message, status, user} = result;
-
                 handleMessage(message, status);
+                setSubmitting(false);
+
                 if (! (message && status && user) )
                     return;
 
+                if ( !user.verified )
+                    return navigation.navigate('Verification', {...user});
                 navigation.navigate('Welcome', {...user});
-                setSubmitting(false);
 
             })
             .catch(error => {
@@ -81,8 +84,11 @@ const LogIn = ({navigation}) => {
     const handleMessage = (message, type = "fail") => {
         setMessage(message);
         setMessageType(type);
+        setTimeout(() => {
+            setMessage('');
+            setMessageType('');
+        }, 7000);
     }
-
 
     const handleGoogleLogin = () => {
         setGoogleSubmitting(true);
@@ -116,7 +122,6 @@ const LogIn = ({navigation}) => {
             });
     }
 
-
     return (
         <KeyboardAvoidingWrapper>
             <StyledContainer>
@@ -140,6 +145,7 @@ const LogIn = ({navigation}) => {
                                 return;
                             }
 
+                            console.log(values);
                             handleLogin(values, setSubmitting);
                         }}
                     >
@@ -169,6 +175,9 @@ const LogIn = ({navigation}) => {
                                     hidePassword={hidePassword}
                                     setHidePassword={setHidePassword}
                                 />
+                                <TextLink style={{alignItems: "left"}} onPress={ () => navigation.navigate("forgotPassword")} >
+                                    <TextLinkContent> Forgot password </TextLinkContent>
+                                </TextLink>
 
                                 <MsgBox type={messageType}>{message}</MsgBox>
 
@@ -197,12 +206,12 @@ const LogIn = ({navigation}) => {
                                     </StyledButton>
                                 }
 
-
                                 <ExtraView>
                                     <ExtraText>Don't have an account already?</ExtraText>
                                     <TextLink onPress={ () => navigation.navigate("Signup")} >
                                         <TextLinkContent> Signup </TextLinkContent>
                                     </TextLink>
+
                                 </ExtraView>
 
                             </StyledFormArea>
@@ -213,21 +222,5 @@ const LogIn = ({navigation}) => {
         </KeyboardAvoidingWrapper>
     );
 };
-
-const TextInput = ({label, icon, isPassword, hidePassword, setHidePassword, ...props}) => {
-    return (
-        <View>
-            <LeftIcon>
-                <Octicons name={icon} size={30} color={brand} />
-            </LeftIcon>
-            <StyledInputLabel>{label}</StyledInputLabel>
-            <StyledTextInput {...props} />
-            {isPassword &&
-                <RightIcon onPress={ () => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'eye-off' : 'eye' } size={30} color={dark_light}/>
-                </RightIcon>}
-        </View>
-    );
-}
 
 export default LogIn
