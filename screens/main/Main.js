@@ -8,46 +8,18 @@
 
 import React, {Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {StatusBar} from "expo-status-bar";
-import {Button, Modal, Pressable, Text, View} from "react-native";
+import {Text, View} from "react-native";
 
 // three
-import {Canvas, useThree} from "@react-three/fiber/native";
+import {Canvas} from "@react-three/fiber/native";
 import useControls from 'r3f-native-orbitcontrols'
-
-// colors
-import {
-    BottomContainer,
-    ButtonText, ClickableText,
-    Colors, GridItem,
-    GridView,
-    gridView,
-    PageTitle,
-    StyledButton
-} from "../../Components/Styles";
-
-const {
-    orange
-} = Colors;
 
 // Predefined rotation angles
 import {Angles} from "../../Components/Angles";
 const {
     zeroDegrees,
     oneDegree,
-    fiveDegrees,
-    thirtyDegrees,
-    fortyFiveDegrees,
     sixtyDegrees,
-    eightyDegrees,
-    ninetyDegrees,
-    oneHundredDegrees,
-    oneHundredTwentyDegrees,
-    oneHundredThirtyFiveDegrees,
-    oneHundredFiftyDegrees,
-    oneHundredEightyDegrees,
-    twoHundredSeventyDegrees,
-    twoHundredNinetyDegrees,
-    threeHundredThirtyDegrees
 } = Angles;
 
 
@@ -56,8 +28,6 @@ import House from "../../Components/models/House";
 import LightButton from "../../Components/models/LightButton";
 import MenuBar from "../../Components/MenuBar";
 import ModalWindow from "../../Components/ModalWindow";
-import {Fontisto, Octicons} from "@expo/vector-icons";
-
 
 /**
  * Main component responsible for rendering the 3D scene with interactive elements.
@@ -72,8 +42,10 @@ const Main = ({ navigation, route }) => {
     const [OrbitControls, events] = useControls();
     const [angle, setAngle] = useState(zeroDegrees);
     const [isRotating, setIsRotating] = useState(false);
-    const { name, email, models, selectedModelIndex } = route.params;
+    const {models, selectedModelIndex } = route.params;
     const {URL} = models[selectedModelIndex];
+
+    const [modalChildren, setModalChildren] = useState(null);
 
     const [menuBarVisible, setMenuBarVisible] = useState(true);
 
@@ -96,7 +68,7 @@ const Main = ({ navigation, route }) => {
                 clearInterval(intervalId);
                 setIsRotating(false);
             }
-        }, 5);
+        }, 2);
     }, [isRotating, setAngle, setIsRotating]);
 
     /**
@@ -118,7 +90,7 @@ const Main = ({ navigation, route }) => {
                 clearInterval(intervalId);
                 setIsRotating(false);
             }
-        }, 5);
+        }, 2);
     }, [isRotating, setAngle, setIsRotating]);
 
 
@@ -159,14 +131,13 @@ const Main = ({ navigation, route }) => {
 
     const [isShowModal, setIsShowModal] = useState(false);
 
-    const showModal = () => {
-        setIsShowModal(true);
-    }
 
     const closeModal = () => {
         setIsShowModal(false);
         setMenuBarVisible(true);
+        setModalChildren(null);
     }
+
     return (
         <>
             <StatusBar style="dark"/>
@@ -177,7 +148,7 @@ const Main = ({ navigation, route }) => {
                 <Canvas
                     key={cameraPosition.join(',')}
                     shadows={true}
-                    // gl={{antialias: true}}
+                    gl={{antialias: true}}
                     camera={{ position: cameraPosition, fov: 75 }}
                 >
                     <OrbitControls
@@ -199,14 +170,18 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.bathroom.x, 1.1, rotatedPositions.bathroom.z]}
                         intensity={2}
                         distance={1.4}
+                        setIsShowModal={setIsShowModal}
+                        setModalChildren={setModalChildren}
                     />
 
                     <LightButton
-                        initialIsOn={false}
+                        initialIsOn={true}
                         scale={0.3}
                         position={[rotatedPositions.room.x, 1.1, rotatedPositions.room.z]}
                         intensity={2}
                         distance={1.4}
+                        setIsShowModal={setIsShowModal}
+                        setModalChildren={setModalChildren}
                     />
 
                     <LightButton
@@ -215,6 +190,8 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.livingRoom.x, 1.1, rotatedPositions.livingRoom.z]}
                         intensity={2}
                         distance={1.4}
+                        setIsShowModal={setIsShowModal}
+                        setModalChildren={setModalChildren}
                     />
 
                     <LightButton
@@ -223,14 +200,18 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.kitchen.x, 1.1, rotatedPositions.kitchen.z]}
                         intensity={2}
                         distance={1.4}
+                        setIsShowModal={setIsShowModal}
+                        setModalChildren={setModalChildren}
                     />
 
                     <LightButton
-                        initialIsOn={false}
+                        initialIsOn={true}
                         scale={0.3}
                         position={[rotatedPositions.entrance.x, 1.1, rotatedPositions.entrance.z]}
                         intensity={2}
                         distance={1.4}
+                        setIsShowModal={setIsShowModal}
+                        setModalChildren={setModalChildren}
                     />
 
                     <Suspense fallback={null}>
@@ -245,56 +226,15 @@ const Main = ({ navigation, route }) => {
                         </Text>
                     </View>
                 }
-
-                {
-                    isShowModal &&
-                    <ModalWindow isOpen={isShowModal} >
+                { isShowModal &&
+                    <ModalWindow isOpen={isShowModal} title="Modal title" closeModal={closeModal} >
                         <>
-                            <PageTitle>Modal title</PageTitle>
-
-                            <GridView>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                                <GridItem >
-                                    <Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
-                                        <Octicons name="home" size={50}></Octicons>
-                                    </Pressable>
-                                </GridItem>
-                            </GridView>
-
-                            <BottomContainer>
-                                <ClickableText onPress={closeModal} onPressIn={closeModal}>Close</ClickableText>
-                                <ClickableText onPress={closeModal} onPressIn={closeModal}>Confirm</ClickableText>
-                            </BottomContainer>
+                            {modalChildren}
                         </>
                     </ModalWindow>
                 }
 
-                <MenuBar menuBarVisible={menuBarVisible} setIsShowModal={setIsShowModal} setMenuBarVisible={setMenuBarVisible} />
-
+                <MenuBar menuBarVisible={menuBarVisible} setIsShowModal={setIsShowModal} setMenuBarVisible={setMenuBarVisible} navigation={navigation} />
             </View>
         </>
     );

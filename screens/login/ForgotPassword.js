@@ -52,7 +52,8 @@ const Signup = ({navigation}) => {
 	// This runs when new passwords are chosen
 	const handlePasswordChange = (credentials, setSubmitting) => {
 		handleMessage(null);
-		const url = "https://smart-home-backend-rc94.onrender.com/api/v1/forgot_password/reset"
+		// const url = "https://smart-home-backend-rc94.onrender.com/api/v1/forgot_password/reset"
+		const url = `${process.env.BASE_URL}/api/v1/forgot_password/reset`
 		// const url = "http://192.168.0.233:5000/api/v1/forgot_password/reset"
 
 		const data = {
@@ -90,7 +91,8 @@ const Signup = ({navigation}) => {
 	// This runs when email is entered to generate OTP.
 	const handlePasswordNewOTP = (credentials, setSubmitting) => {
 		handleMessage(null);
-		const url = "https://smart-home-backend-rc94.onrender.com/api/v1/forgot_password/"
+		const url = `${process.env.BASE_URL}/api/v1/forgot_password/`
+		// const url = "https://smart-home-backend-rc94.onrender.com/api/v1/forgot_password/"
 		// const url = "http://192.168.0.233:5000/api/v1/forgot_password/"
 
 		axios

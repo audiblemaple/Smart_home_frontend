@@ -1,18 +1,28 @@
 import React from 'react';
-import {KeyboardAvoidingView, Modal as RNModal, ModalProps, Platform, View} from "react-native";
+import {Modal as RNModal, Platform} from "react-native";
 import KeyboardAvoidingWrapper from "./KeyboardAvoidingWrapper";
-import {ModalContainer} from "./Styles";
+import {BottomContainer, ClickableText, ModalContainer, PageTitle} from "./Styles";
 
-const ModalWindow = ({isOpen, withInput, children, ...rest}) => {
+const ModalWindow = ({isOpen, title, closeModal, withInput, children, ...rest}) => {
 	const content = withInput ? (
 		<KeyboardAvoidingWrapper behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
 			<ModalContainer>
+				<PageTitle>{title}</PageTitle>
 				{children}
+				<BottomContainer>
+					<ClickableText onPress={closeModal} onPressIn={closeModal}>Close</ClickableText>
+					{/*<ClickableText onPress={closeModal} onPressIn={closeModal}>Confirm</ClickableText>*/}
+				</BottomContainer>
 			</ModalContainer>
 		</KeyboardAvoidingWrapper>
 	) : (
 		<ModalContainer>
+			<PageTitle>{title}</PageTitle>
 			{children}
+			<BottomContainer>
+				<ClickableText onPress={closeModal} onPressIn={closeModal}>Close</ClickableText>
+				{/*<ClickableText onPress={closeModal} onPressIn={closeModal}>Confirm</ClickableText>*/}
+			</BottomContainer>
 		</ModalContainer>
 	);
 
@@ -22,7 +32,6 @@ const ModalWindow = ({isOpen, withInput, children, ...rest}) => {
 			transparent
 			animationType="fade"
 			statusBarTranslucent
-			onPressOut={() => {console.log("hello world")}}
 			{...rest}
 		>
 			{content}
@@ -31,31 +40,3 @@ const ModalWindow = ({isOpen, withInput, children, ...rest}) => {
 };
 
 export default ModalWindow;
-
-
-// import {BottomContainer, ModalContainer, PageTitle} from "./Styles";
-// import {Button} from "react-native";
-//
-// const ModalWindow = ({isShowModal, modalTitle, setMenuBarVisible, setIsShowModal}) => {
-//
-// 	const closeModal = () => {
-// 		setMenuBarVisible(true);
-// 		setIsShowModal(false);
-// 		console.log("closing");
-// 	}
-//
-// 	return (
-// 		 isShowModal ? (
-// 			<ModalContainer>
-// 				<PageTitle color="black" >{modalTitle}</PageTitle>
-//
-// 				<BottomContainer>
-// 					<Button title="Close"	onPress={ closeModal } ></Button>
-// 					<Button title="OK"		onPress={ closeModal } ></Button>
-// 				</BottomContainer>
-// 			</ModalContainer>
-// 		) : null
-// 	);
-// };
-//
-// export default ModalWindow;

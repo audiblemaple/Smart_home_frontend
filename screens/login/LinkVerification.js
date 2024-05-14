@@ -85,7 +85,8 @@ const  Verification = ({navigation, route}) => {
 	const handleVerify = (credentials, setSubmitting) => {
 		credentials.email = email;
 		handleMessage(null);
-		const url = "https://smart-home-backend-rc94.onrender.com/api/v1/email_verification/verify"
+		const url = `${process.env.BASE_URL}/api/v1/email_verification/verify`
+		// const url = "https://smart-home-backend-rc94.onrender.com/api/v1/email_verification/verify"
 		// const url = "http://192.168.0.233:5000/api/v1/email_verification/verify"
 
 		axios

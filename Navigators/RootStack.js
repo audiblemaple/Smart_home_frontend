@@ -5,8 +5,8 @@ import {Colors} from "../Components/Styles";
 const {primary, tertiary} = Colors;
 
 // React navigation
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from "@react-navigation/stack";
+import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator} from "@react-navigation/stack";
 
 // Screens
 import Signup from "../screens/login/SignUp";
@@ -14,6 +14,7 @@ import LogIn from "../screens/login/LogIn";
 import Main from "../screens/main/Main";
 import Verification from "../screens/login/LinkVerification";
 import ForgotPassword from "../screens/login/ForgotPassword";
+import Settings from "../screens/settings/Settings";
 
 const Stack = createStackNavigator();
 
@@ -38,7 +39,8 @@ const RootStack = () => {
 				<Stack.Screen name="Signup" component={Signup}/>
 				<Stack.Screen name="forgotPassword" component={ForgotPassword}/>
 				<Stack.Screen name="Verification" component={Verification}/>
-				<Stack.Screen options={{headerTintColor: primary}} name="Welcome" component={Main}/>
+				<Stack.Screen options={{headerTintColor: tertiary}} name="Welcome" component={Main}/>
+				<Stack.Screen options={{headerTintColor: tertiary}} name="Settings" component={Settings}/>
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

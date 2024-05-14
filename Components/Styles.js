@@ -203,6 +203,13 @@ export const ExtraText = styled.Text`
     font-size: 15px;
 `;
 
+export const TopPaddedText = styled.Text`
+    color: ${tertiary};
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 0 0 0;
+`;
+
 export const TextLink = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
@@ -263,7 +270,7 @@ export const InlineGroup = styled.View`
 `;
 
 // MenuBar styles
-export const MenuBarContainerSmall = styled.View`
+export const MenuBarContainerFull = styled.View`
     position: absolute;
     left: 5%;
     bottom: 40px;
@@ -277,9 +284,9 @@ export const MenuBarContainerSmall = styled.View`
     border: solid black 2px;
 `;
 
-export const MenuBarContainerFull = styled(MenuBarContainerSmall)`
+export const MenuBarContainerSmall = styled(MenuBarContainerFull)`
     border-radius: 0 20px 20px 0;
-    width: 13%;
+    width: 15%;
 `;
 
 export const MenuBarButton = styled.TouchableOpacity`
@@ -295,7 +302,7 @@ export const ModalContainer = styled.View`
     position: absolute;
     padding: 5px 20px 5px 20px;
     border-radius: 30px;
-    bottom: 2%;
+    bottom: 3%;
     left: 5%;
     right: 5%;
     flex: 1;
@@ -319,9 +326,9 @@ export const GridView = styled.View`
     flex: 1;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 5px;
+    padding: 25px 0 20px 0 ;
     justify-content: center;
-    gap: 30px;
+    gap: 40px;
 `;
 
 export const GridItem = styled.View`

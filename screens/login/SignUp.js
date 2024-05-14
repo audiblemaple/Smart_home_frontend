@@ -71,7 +71,8 @@ const Signup = ({navigation}) => {
 
     const handleSignup = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        // const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/signup"
+        const url = `${process.env.BASE_URL}/api/v1/user/signup`
         // const url = "http://192.168.0.233:5000/api/v1/user/UploadModel" // debug
         // const url = "http://192.168.0.233:5000/api/v1/user/signup"
         // const url = "http://100.64.100.6:5000/api/v1/user/signup"
@@ -132,7 +133,7 @@ const Signup = ({navigation}) => {
                 <StatusBar style="dark"/>
                 <InnerContainer>
                     <PageTitle>Smart home</PageTitle>
-                    <SubTitle> Account Signup</SubTitle>
+                    <SubTitle> Account Sign-up</SubTitle>
 
                     {/*TODO: Fix this on IOS it doesnt display the date time picker menu!!*/}
                     { Platform.OS === "android" && show &&

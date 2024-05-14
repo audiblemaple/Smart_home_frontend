@@ -40,7 +40,6 @@ import axios from "axios";
 
 // google
 import * as Google from 'expo-google-app-auth'
-import ModalWindow from "../../Components/ModalWindow";
 
 const LogIn = ({navigation}) => {
 
@@ -53,7 +52,11 @@ const LogIn = ({navigation}) => {
 
     const handleLogin = (credentials, setSubmitting) => {
         handleMessage(null);
-        const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/"
+
+        // const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/"
+        const url = `${process.env.BASE_URL}/api/v1/user/`
+        console.log(url);
+
         axios
             .post(url, credentials )
             .then((response) => {
@@ -207,7 +210,7 @@ const LogIn = ({navigation}) => {
                                 }
 
                                 <ExtraView>
-                                    <ExtraText>Don't have an account already?</ExtraText>
+                                    <ExtraText>Don't have an account?</ExtraText>
                                     <TextLink onPress={ () => navigation.navigate("Signup")} >
                                         <TextLinkContent> Signup </TextLinkContent>
                                     </TextLink>
