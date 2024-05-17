@@ -9,11 +9,12 @@ export const Colors = {
     dark_light: "#9CA3AF",
     gray: "#6B7280",
     brand: "#6D28D9",
+    brandDisabled: "rgba(109,40,217,0.5)",
     green: "#10B981",
     red: "#EF4444",
     orange: "#ff7e00",
     transparentGreen: 'rgba(16, 185, 129, 0.1)',
-    transparentGray: 'rgba(154,154,154,0.52)',
+    transparentTurquoise: 'rgba(225,255,244,0.52)',
     transparentWhite: 'rgba(217,217,217,0.75)'
 }
 
@@ -24,11 +25,12 @@ const {
     dark_light,
     gray,
     brand,
+    brandDisabled,
     green,
     red,
     orange,
     transparentGreen,
-    transparentGray,
+    transparentTurquoise,
     transparentWhite
 } = Colors;
 
@@ -279,9 +281,10 @@ export const MenuBarContainerFull = styled.View`
     align-items: center;
     justify-content: space-evenly;
     border-radius: 20px;
-    background-color: ${transparentGray};
+    background-color: ${transparentTurquoise};
     padding: 5px;
     border: solid black 2px;
+    
 `;
 
 export const MenuBarContainerSmall = styled(MenuBarContainerFull)`
@@ -295,7 +298,6 @@ export const MenuBarButton = styled.TouchableOpacity`
     align-items: center;
     border-radius: 10px;
 `;
-
 
 // Modal window
 export const ModalContainer = styled.View`
@@ -312,7 +314,6 @@ export const ModalContainer = styled.View`
     background-color: #e1e1e1;
 `;
 
-
 export const BottomContainer = styled.View`
     flex: 1;
     flex-direction: row;
@@ -328,16 +329,25 @@ export const GridView = styled.View`
     flex-wrap: wrap;
     padding: 25px 0 20px 0 ;
     justify-content: center;
-    gap: 40px;
+    gap: 35px;
 `;
 
 export const GridItem = styled.View`
-    width: 60px;
-    height: 60px;
-    padding: 5px;
-    border-radius: 10px;
+    width: auto;
+    height: auto;
+    flex: 1;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: ${gray};
-    z-index: 1;
+    text-align: center;
+    //background-color: ${gray};
+`;
+
+export const CenteredText = styled.Text`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
 `;

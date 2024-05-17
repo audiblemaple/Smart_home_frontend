@@ -21,7 +21,7 @@ import {
 import {Ionicons, Octicons} from "@expo/vector-icons";
 import ResendTimer from "../../Components/ResendTimer";
 import KeyboardAvoidingWrapper from "../../Components/KeyboardAvoidingWrapper";
-import {ActivityIndicator, View} from "react-native";
+import {View} from "react-native";
 import {Formik} from "formik";
 import axios from "axios";
 

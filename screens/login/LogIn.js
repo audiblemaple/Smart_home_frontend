@@ -5,7 +5,7 @@ import {StatusBar} from "expo-status-bar";
 import {Formik} from "formik";
 
 // icons
-import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
+import {Fontisto} from '@expo/vector-icons';
 
 import {
     StyledContainer,
@@ -14,10 +14,6 @@ import {
     PageTitle,
     SubTitle,
     StyledFormArea,
-    LeftIcon,
-    StyledInputLabel,
-    StyledTextInput,
-    RightIcon,
     StyledButton,
     ButtonText,
     Colors,
@@ -26,9 +22,9 @@ import {
     ExtraView,
     ExtraText,
     TextLink,
-    TextLinkContent, BottomContainer
+    TextLinkContent
 } from "../../Components/Styles";
-import {View, ActivityIndicator, Text, Pressable, Button, Platform} from "react-native";
+import {ActivityIndicator} from "react-native";
 
 const { dark_light, primary} = Colors
 
@@ -41,6 +37,15 @@ import axios from "axios";
 // google
 import * as Google from 'expo-google-app-auth'
 
+
+/**
+ * Main component responsible for rendering the login screen.
+ * Manages user authentication through email/password and Google login.
+ *
+ * @param {Object} props - Component props.
+ * @param {Object} props.navigation - Navigation object provided by the navigation context.
+ * @returns {React.Component} - Returns a React component that renders the login screen.
+ */
 const LogIn = ({navigation}) => {
 
     const [hidePassword, setHidePassword] = useState(true)
@@ -48,14 +53,18 @@ const LogIn = ({navigation}) => {
     const [messageType, setMessageType] = useState('');
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
-    const [modalteststate, setmodalteststate] = useState(false);
 
+    /**
+     * Handles the login process with email and password.
+     *
+     * @param {Object} credentials - User credentials containing email and password.
+     * @param {Function} setSubmitting - Formik function to handle form submission state.
+     */
     const handleLogin = (credentials, setSubmitting) => {
         handleMessage(null);
 
         // const url = "https://smart-home-backend-rc94.onrender.com/api/v1/user/"
         const url = `${process.env.BASE_URL}/api/v1/user/`
-        console.log(url);
 
         axios
             .post(url, credentials )
@@ -84,6 +93,13 @@ const LogIn = ({navigation}) => {
             });
     }
 
+
+    /**
+     * Displays a message to the user.
+     *
+     * @param {string} message - The message to be displayed.
+     * @param {string} type - The type of message (default is "fail").
+     */
     const handleMessage = (message, type = "fail") => {
         setMessage(message);
         setMessageType(type);
@@ -93,6 +109,10 @@ const LogIn = ({navigation}) => {
         }, 7000);
     }
 
+
+    /**
+     * Handles the login process using Google authentication.
+     */
     const handleGoogleLogin = () => {
         setGoogleSubmitting(true);
 
@@ -148,9 +168,23 @@ const LogIn = ({navigation}) => {
                                 return;
                             }
 
-                            console.log(values);
                             handleLogin(values, setSubmitting);
                         }}
+
+                        validateOnChange={(values, {setSubmitting}) => {
+                            if (values.email === '') {
+                                handleMessage("Email field cannot be empty");
+                                setSubmitting(false);
+                                return;
+                            }
+
+                            if (values.password === '') {
+                                handleMessage("Password field cannot be empty");
+                                setSubmitting(false);
+                                return;
+                            }
+                        }}
+
                     >
                         {({handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
                             <StyledFormArea>
@@ -194,6 +228,7 @@ const LogIn = ({navigation}) => {
                                         <ActivityIndicator size="large" color={primary}/>
                                     </StyledButton>
                                 }
+
                                 <Line/>
 
                                 {!googleSubmitting &&

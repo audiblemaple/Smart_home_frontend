@@ -6,9 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 // formik
 import {Formik} from "formik";
-
-// icons
-import {Octicons, Ionicons} from '@expo/vector-icons';
+import TextInput from "../../Components/TextInput";
 
 // styled components
 import {
@@ -37,10 +35,9 @@ import {View, TouchableOpacity, ActivityIndicator, Button, Platform} from "react
 import KeyboardAvoidingWrapper from "../../Components/KeyboardAvoidingWrapper";
 
 // API client
-import axios, {Cancel} from "axios";
+import axios from "axios";
 
 import DocumentPickerComponent from "../../Components/FileUploadComponent";
-import ModalWindow from "../../Components/ModalWindow";
 
 const {brand, dark_light, primary} = Colors
 
@@ -169,6 +166,11 @@ const Signup = ({navigation}) => {
                         onSubmit={(values, {setSubmitting}) =>
                         {
                             values = { ...values, dateOfBirth: userDate, file: file }
+                            if (values.name === '') {
+                                handleMessage("name field cannot be empty");
+                                setSubmitting(false);
+                                return;
+                            }
                             if (values.email === '') {
                                 handleMessage("Email field cannot be empty");
                                 setSubmitting(false);
@@ -301,23 +303,23 @@ const Signup = ({navigation}) => {
     );
 };
 
-const TextInput = ({label, icon, isPassword, hidePassword, setHidePassword,isDate, showDatePicker, ...props}) => {
-    return (
-        <View>
-            <LeftIcon>
-                <Octicons name={icon} size={30} color={brand} />
-            </LeftIcon>
-            <StyledInputLabel>{label}</StyledInputLabel>
-            {!isDate && <StyledTextInput {...props}/>}
-            {isDate && <TouchableOpacity onPress={showDatePicker} >
-                <StyledTextInput {...props}/>
-            </TouchableOpacity>}
-            {isPassword &&
-                <RightIcon onPress={ () => setHidePassword(!hidePassword)}>
-                    <Ionicons name={hidePassword ? 'eye-off' : 'eye' } size={30} color={dark_light}/>
-                </RightIcon>}
-        </View>
-    );
-}
+// const TextInput = ({label, icon, isPassword, hidePassword, setHidePassword,isDate, showDatePicker, ...props}) => {
+//     return (
+//         <View>
+//             <LeftIcon>
+//                 <Octicons name={icon} size={30} color={brand} />
+//             </LeftIcon>
+//             <StyledInputLabel>{label}</StyledInputLabel>
+//             {!isDate && <StyledTextInput {...props}/>}
+//             {isDate && <TouchableOpacity onPress={showDatePicker} >
+//                 <StyledTextInput {...props}/>
+//             </TouchableOpacity>}
+//             {isPassword &&
+//                 <RightIcon onPress={ () => setHidePassword(!hidePassword)}>
+//                     <Ionicons name={hidePassword ? 'eye-off' : 'eye' } size={30} color={dark_light}/>
+//                 </RightIcon>}
+//         </View>
+//     );
+// }
 
 export default Signup

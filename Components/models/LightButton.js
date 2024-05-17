@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useSpring, animated } from '@react-spring/three';
-import {Vibration} from "react-native";
-import {lightOptions} from "../utils/modalComponents";
+import {Pressable, Text, Vibration} from "react-native";
+import {CenteredText, GridItem, GridView} from "../Styles";
+import {Octicons} from "@expo/vector-icons";
 
-const LightButton = ({ initialIsOn, scale, position, intensity, distance, setIsShowModal, setModalChildren }) => {
+const LightButton = ({ initialIsOn, scale, position, intensity, distance, openModal}) => {
 	const [isOn, setIsOn] = useState(initialIsOn);
 
 	const [props, set] = useSpring(() => ({
@@ -27,16 +28,33 @@ const LightButton = ({ initialIsOn, scale, position, intensity, distance, setIsS
 		});
 	};
 
+	const lightOptions = (
+		<GridView>
+			<GridItem >
+				<Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
+					<Octicons name="clock" size={50}></Octicons>
+					<CenteredText>timer</CenteredText>
+				</Pressable>
+			</GridItem>
+			<GridItem >
+				<Pressable onPress={() => {console.log("clicked")}} onPressIn={() => {console.log("clicked")}} >
+					<Octicons name="info" size={50}></Octicons>
+					<CenteredText>info</CenteredText>
+				</Pressable>
+			</GridItem>
+		</GridView>
+	);
+
 	const startPress = () => {
 		// Start the timer to detect long press
 		pressTimer = window.setTimeout(() => {
-			setIsShowModal(true);
 			setShouldToggle(false);
 			console.log(shouldToggle);
-			// Temporary vibration
+
+			// TODO: change the vibration style to be quicker and more aggressive to indicate that something happens
 			Vibration.vibrate([10, 20]);
-			setModalChildren( lightOptions );
-		}, 500); // 700 ms for long press threshold
+			openModal("Light settings", lightOptions);  // TODO: here maybe add: "name of the button" settings
+		}, 500); // XXX ms for long press threshold
 	};
 
 	const cancelPress = () => {

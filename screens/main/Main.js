@@ -6,7 +6,7 @@
  * @returns {JSX.Element} The rendered component containing the 3D scene with light buttons and controls.
  */
 
-import React, {Suspense, useCallback, useEffect, useRef, useState} from "react";
+import React, {Suspense, useCallback, useState} from "react";
 import {StatusBar} from "expo-status-bar";
 import {Text, View} from "react-native";
 
@@ -44,10 +44,11 @@ const Main = ({ navigation, route }) => {
     const [isRotating, setIsRotating] = useState(false);
     const {models, selectedModelIndex } = route.params;
     const {URL} = models[selectedModelIndex];
-
-    const [modalChildren, setModalChildren] = useState(null);
-
+    const [modalChildren, setModalChildren] = useState(undefined);
     const [menuBarVisible, setMenuBarVisible] = useState(true);
+    const [modalTitle, setModalTitle] = useState("untitled");
+    const [cameraPosition, setCameraPosition] = useState([0, 2, 5]);
+    const [isShowModal, setIsShowModal] = useState(false);
 
     /**
      * Rotates the model to the right by increasing the current angle by 10 degrees.
@@ -123,19 +124,40 @@ const Main = ({ navigation, route }) => {
         rotatedPositions[key] = rotatePosition(lightPositions[key], angle);
     });
 
-    const [cameraPosition, setCameraPosition] = useState([0, 2, 5]);
+    /**
+     * Moves the camera to a new position.
+     *
+     * @param {Array} position - The new camera position as an array of coordinates [x, y, z].
+     */
     const move_camera = useCallback((position) => {
         console.log("updating camera");
         setCameraPosition(position);
     }, [setCameraPosition]);
 
-    const [isShowModal, setIsShowModal] = useState(false);
 
-
+    /**
+     * Closes the modal window.
+     */
     const closeModal = () => {
         setIsShowModal(false);
         setMenuBarVisible(true);
         setModalChildren(null);
+        setModalTitle("Untitled");
+    }
+
+    /**
+     * Opens the modal window with the specified title and content.
+     *
+     * @param {string} title - The title of the modal.
+     * @param {React.ReactNode} children - The content to be displayed inside the modal.
+     */
+    const openModal = (title, children) => {
+        closeModal();
+        setModalTitle(title);
+        setModalChildren(children);
+
+        setIsShowModal(true);
+        setMenuBarVisible(false);
     }
 
     return (
@@ -170,8 +192,7 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.bathroom.x, 1.1, rotatedPositions.bathroom.z]}
                         intensity={2}
                         distance={1.4}
-                        setIsShowModal={setIsShowModal}
-                        setModalChildren={setModalChildren}
+                        openModal={openModal}
                     />
 
                     <LightButton
@@ -180,8 +201,7 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.room.x, 1.1, rotatedPositions.room.z]}
                         intensity={2}
                         distance={1.4}
-                        setIsShowModal={setIsShowModal}
-                        setModalChildren={setModalChildren}
+                        openModal={openModal}
                     />
 
                     <LightButton
@@ -190,8 +210,7 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.livingRoom.x, 1.1, rotatedPositions.livingRoom.z]}
                         intensity={2}
                         distance={1.4}
-                        setIsShowModal={setIsShowModal}
-                        setModalChildren={setModalChildren}
+                        openModal={openModal}
                     />
 
                     <LightButton
@@ -200,8 +219,7 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.kitchen.x, 1.1, rotatedPositions.kitchen.z]}
                         intensity={2}
                         distance={1.4}
-                        setIsShowModal={setIsShowModal}
-                        setModalChildren={setModalChildren}
+                        openModal={openModal}
                     />
 
                     <LightButton
@@ -210,8 +228,7 @@ const Main = ({ navigation, route }) => {
                         position={[rotatedPositions.entrance.x, 1.1, rotatedPositions.entrance.z]}
                         intensity={2}
                         distance={1.4}
-                        setIsShowModal={setIsShowModal}
-                        setModalChildren={setModalChildren}
+                        openModal={openModal}
                     />
 
                     <Suspense fallback={null}>
@@ -226,15 +243,16 @@ const Main = ({ navigation, route }) => {
                         </Text>
                     </View>
                 }
+
                 { isShowModal &&
-                    <ModalWindow isOpen={isShowModal} title="Modal title" closeModal={closeModal} >
+                    <ModalWindow isOpen={isShowModal} title={modalTitle} closeModal={closeModal} >
                         <>
                             {modalChildren}
                         </>
                     </ModalWindow>
                 }
 
-                <MenuBar menuBarVisible={menuBarVisible} setIsShowModal={setIsShowModal} setMenuBarVisible={setMenuBarVisible} navigation={navigation} />
+                <MenuBar menuBarVisible={menuBarVisible} navigation={navigation} openModal={openModal} user={route.params}/>
             </View>
         </>
     );

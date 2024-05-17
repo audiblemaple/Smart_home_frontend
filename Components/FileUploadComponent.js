@@ -1,6 +1,6 @@
 import React from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import {ButtonText, PaddedText, StyledButton, TopPaddedText} from "./Styles";
+import {ButtonText, StyledButton, TopPaddedText} from "./Styles";
 import {Alert} from "react-native";
 import {Octicons} from "@expo/vector-icons";
 
